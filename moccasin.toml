@@ -1,0 +1,52 @@
+[project]
+src = "src"
+out = "out"
+dot_env = ".env"
+dependencies = ["snekmate"]
+
+# ------------------------------------------------------------------
+#                           DEPLOYERS
+# ------------------------------------------------------------------
+
+
+[networks.contracts.token]
+deployer_script = "script/deploy_token.py"
+
+
+# ------------------------------------------------------------------
+#                            NETWORKS
+# ------------------------------------------------------------------
+
+[networks.anvil]
+url = "http://127.0.0.1:8545"
+prompt_live = false
+save_to_db = false
+chain_id = 31337
+
+
+[networks.zksync-sepolia]
+url = "https://sepolia.era.zksync.dev"
+chain_id = 300
+is_zksync = true
+prompt_live = true
+explorer_type = "zksyncexplorer"
+explorer_url = "https://explorer.sepolia.era.zksync.dev"
+default_account_name = "sepolia_account"
+#unsafe_password_file = "$SMALLTESTNET_PASSWORD_FILE"
+
+[networks.zksync-fork]
+url = "$ZKSYNC_RPC_URL"
+chain_id = 324
+is_zksync = true
+prompt_live = true
+fork = true
+explorer_type = "zksyncexplorer"
+explorer_url = "https://zksync2-mainnet-explorer.zksync.io"
+
+[networks.sepolia-fork]
+url = "$SEPOLIA_RPC_URL"
+chain_id = 11155111
+prompt_live = false
+fork = true
+
+# You can view all configuration options at https://cyfrin.github.io/moccasin/all_moccasin_toml_parameters.html
