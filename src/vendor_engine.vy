@@ -17,7 +17,7 @@ from ethereum.ercs import IERC20
 #                        STATE VARIABLES
 # ------------------------------------------------------------------
 
-TOKENS_PER_ETH: public(constant(uint256)) = 100 * (10**18)
+TOKENS_PER_ETH: public(constant(uint256)) = 100 
 TOKEN: public(immutable(i_token))
 OWNER: public(immutable(address))
 
@@ -52,7 +52,7 @@ def buyTokens():
     """@notice Allows users to buy tokens from the vendor by sending ETH
     """
     #Checks
-    assert msg.value > 0, "Vendor: Invalid amount of ETH "
+    assert msg.value > 0, "Vendor: Invalid amount of ETH sent"
     tokensToBuy: uint256 = msg.value * TOKENS_PER_ETH
     vendorBalance: uint256 = staticcall TOKEN.balanceOf(self)
     assert vendorBalance >= tokensToBuy, "Vendor: Not enough tokens in the reserve"
@@ -84,7 +84,7 @@ def sellTokens(amount: uint256):
     #Interactions
     success: bool = extcall TOKEN.transferFrom(msg.sender, self, amount)
     assert success, "Vendor: Failed to transfer tokens from user"
-
+    send(msg.sender, ethToReturn)
 
 
 @external

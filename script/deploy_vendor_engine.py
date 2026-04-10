@@ -1,11 +1,17 @@
 from moccasin.boa_tools import VyperContract
-from src import vendor
+from src import vendor_engine
 from moccasin.config import get_active_network
 
 def deploy_vendor(token_contract: VyperContract):
-    """Deploys the Vendor contract using the provided token contract."""
+    """Deploys the Vendor contract using the provided token contract.
+    Args:
+        token_contract (VyperContract): The deployed token contract instance.
+    Returns:
+        VyperContract: The deployed Vendor contract instance.
+    
+    """
     active_network = get_active_network()
-    vendor_contract = vendor.deploy(token_contract)
+    vendor_contract = vendor_engine.deploy(token_contract)
 
     #verify contract on explorer
     if active_network.has_explorer():
@@ -16,7 +22,11 @@ def deploy_vendor(token_contract: VyperContract):
     return vendor_contract
 
 def moccasin_main():
-    """Main deployment function for Moccasin framework."""
+    """Main deployment function for Moccasin framework.
+    
+    Returns:
+        VyperContract: The deployed Vendor contract instance.
+    """
     active_network = get_active_network()
     token = active_network.manifest_named("token")
     return deploy_vendor(token)
