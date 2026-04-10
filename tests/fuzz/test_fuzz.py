@@ -1,6 +1,4 @@
 import boa
-from boa.util.abi import Address
-from boa import BoaError
 from eth_utils import to_wei
 from hypothesis import settings
 from hypothesis import strategies as st
@@ -21,12 +19,12 @@ class TokenVendorFuzzer(RuleBasedStateMachine):
         self.token  = deploy_v_token()
         self.vendor = deploy_vendor(self.token)
 
-  
+
         self.users = [boa.env.generate_address() for _ in range(USERS_SIZE)]
         for user in self.users:
             boa.env.set_balance(user, INITIAL_BAL)
 
-      
+
         owner_balance = self.token.balanceOf(boa.env.eoa)
         self.token.transfer(self.vendor.address, owner_balance)
 
@@ -52,8 +50,10 @@ class TokenVendorFuzzer(RuleBasedStateMachine):
         eth_to_return = amount // self.vendor.TOKENS_PER_ETH()
 
     
-        if self.token.balanceOf(user) < amount:                      return
-        if boa.env.get_balance(self.vendor.address) < eth_to_return: return
+        if self.token.balanceOf(user) < amount:
+            return
+        if boa.env.get_balance(self.vendor.address) < eth_to_return: 
+            return
 
         self.token.approve(self.vendor.address, amount, sender=user)
         self.vendor.sellTokens(amount, sender=user)
