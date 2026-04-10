@@ -12,7 +12,7 @@ from script.deploy_token import deploy_v_token
 
 USERS_SIZE    = 10
 MAX_ETH       = to_wei(100, "ether")
-INITIAL_BAL   = to_wei(1000, "ether")  # ← balance initiale pour chaque user
+INITIAL_BAL   = to_wei(1000, "ether") 
 
 class TokenVendorFuzzer(RuleBasedStateMachine):
 
@@ -21,12 +21,12 @@ class TokenVendorFuzzer(RuleBasedStateMachine):
         self.token  = deploy_v_token()
         self.vendor = deploy_vendor(self.token)
 
-        # Générer les users et leur donner une balance ETH ✅
+  
         self.users = [boa.env.generate_address() for _ in range(USERS_SIZE)]
         for user in self.users:
             boa.env.set_balance(user, INITIAL_BAL)
 
-        # Approvisionner le vendor en tokens ✅
+      
         owner_balance = self.token.balanceOf(boa.env.eoa)
         self.token.transfer(self.vendor.address, owner_balance)
 
@@ -39,7 +39,7 @@ class TokenVendorFuzzer(RuleBasedStateMachine):
         assume_eth  = boa.env.get_balance(user) >= amount
         assume_tokens = self.token.balanceOf(self.vendor.address) >= amount * 100
         if not assume_eth or not assume_tokens:
-            return  # ← return au lieu de assume() ✅
+            return 
         self.vendor.buyTokens(value=amount, sender=user)
 
     @rule(
@@ -51,11 +51,10 @@ class TokenVendorFuzzer(RuleBasedStateMachine):
 
         eth_to_return = amount // self.vendor.TOKENS_PER_ETH()
 
-        # Guards — préconditions du contrat
+    
         if self.token.balanceOf(user) < amount:                      return
         if boa.env.get_balance(self.vendor.address) < eth_to_return: return
 
-        # ✅ On n'arrive ici que si toutes les conditions sont remplies
         self.token.approve(self.vendor.address, amount, sender=user)
         self.vendor.sellTokens(amount, sender=user)
                 
