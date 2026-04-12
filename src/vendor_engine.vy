@@ -83,8 +83,8 @@ def sellTokens(amount: uint256):
 
     #Interactions
     success: bool = extcall TOKEN.transferFrom(msg.sender, self, amount)
-    assert success, "Vendor: Failed to transfer tokens from user"
-    send(msg.sender, ethToReturn)
+    assert success, "Vendor: Failed to transfer tokens from seller"
+    raw_call(msg.sender, b"", value=ethToReturn)
 
 
 @external
